@@ -2,7 +2,8 @@ package infraestructure
 
 import (
 	"Abarrotes/src/core"
-	"fmt"
+	"Abarrotes/src/products/domain"
+	"Abarrotes/src/products/domain/entities"
 	"log"
 )
 
@@ -10,8 +11,7 @@ type MySQL struct {
 	conn *core.Conn_MySQL
 }
 
-
-func NewMySQL() *MySQL {
+func NewMySQL() domain.ProductRepository {
 	conn := core.GetDBPool()
 	if conn.Err != "" {
 		log.Fatalf("Error al configurar el pool de conexiones: %v", conn.Err)
@@ -20,37 +20,38 @@ func NewMySQL() *MySQL {
 	return &MySQL{conn: conn}
 }
 
-
-func (mysql *MySQL) Save(name string, price float64) {
+func (mysql *MySQL) Create(product entities.Product) (entities.Product, error) {
 	query := "INSERT INTO product (name, price) VALUES (?, ?)"
-	result, err := mysql.conn.ExecutePreparedQuery(query, name, price)
+	result, err := mysql.conn.ExecutePreparedQuery(query, product.Name, product.Price)
 	if err != nil {
-		log.Fatalf("Error al ejecutar la consulta: %v", err)
+		log.Printf("Error al insertar producto: %v", err)
+		return entities.Product{}, err
 	}
 
-	rowsAffected, _ := result.RowsAffected()
-	if rowsAffected == 1 {
-		log.Printf("[MySQL] - Producto agregado correctamente")
-	}
+	lastInsertID, _ := result.LastInsertId()
+	product.ID = int(lastInsertID)
+
+	return product, nil
 }
 
-
-func (mysql *MySQL) GetAll() {
+func (mysql *MySQL) GetAll() ([]entities.Product, error) {
 	query := "SELECT idproduct, name, price FROM product"
 	rows := mysql.conn.FetchRows(query)
 	defer rows.Close()
 
+	var products []entities.Product
 	for rows.Next() {
-		var idproduct int
-		var name string
-		var price float32
-		if err := rows.Scan(&idproduct, &name, &price); err != nil {
-			log.Fatalf("Error al escanear la fila: %v", err)
+		var product entities.Product
+		if err := rows.Scan(&product.ID, &product.Name, &product.Price); err != nil {
+			log.Printf("Error al escanear producto: %v", err)
+			return nil, err
 		}
-		fmt.Printf("ID: %d, Name: %s, Price: %.2f\n", idproduct, name, price)
+		products = append(products, product)
 	}
 
 	if err := rows.Err(); err != nil {
-		log.Fatalf("Error iterando sobre las filas: %v", err)
+		return nil, err
 	}
+
+	return products, nil
 }

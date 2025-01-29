@@ -2,12 +2,16 @@ package controllers
 
 import (
 	"Abarrotes/src/products/application"
-	"net/http"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type ShowProductController struct {
 	useCase *application.ShowProduct
+}
+
+func (c *ShowProductController) Execute() {
+	panic("unimplemented")
 }
 
 func NewShowProductController(uc *application.ShowProduct) *ShowProductController {

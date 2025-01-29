@@ -12,6 +12,10 @@ type CreateProductController struct {
 	useCase *application.CreateProduct
 }
 
+func (c *CreateProductController) Execute() {
+	panic("unimplemented")
+}
+
 func NewCreateProductController(uc *application.CreateProduct) *CreateProductController {
 	return &CreateProductController{useCase: uc}
 }

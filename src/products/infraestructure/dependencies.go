@@ -3,17 +3,16 @@ package infraestructure
 import (
 	"Abarrotes/src/products/application"
 	"Abarrotes/src/products/infraestructure/controller"
-	"Abarrotes/src/products/infraestructure/repository"
 )
 
-func InitializeControllers() (controllers.ShowProductController, controllers.CreateProductController) {
-	repo := repository.NewInMemoryProductRepository()
+func Init() (*controllers.ShowProductController, *controllers.CreateProductController) {
+	ps := NewMySQL()
 
-	showProductUseCase := application.NewShowProduct(repo)
-	createUseCase := application.NewCreateProduct(repo)
+	showProductUseCase := application.NewShowProduct(ps)
+	createUseCase := application.NewCreateProduct(ps)
 
-	showProduct := controllers.NewShowProductController(showProductUseCase)
-	createController := controllers.NewCreateProductController(createUseCase)
+	showProductController := controllers.NewShowProductController(showProductUseCase)
+	createProductController := controllers.NewCreateProductController(createUseCase)
 
-	return *showProduct, *createController
+	return showProductController, createProductController
 }
