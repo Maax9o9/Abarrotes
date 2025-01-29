@@ -2,7 +2,7 @@ package infraestructure
 
 import (
 	"Abarrotes/src/products/application"
-	"Abarrotes/src/products/infraestructure/controller"
+	"Abarrotes/src/products/infraestructureP/controller"
 )
 
 func Init() (*controllers.ShowProductController, *controllers.CreateProductController, *controllers.RemoveProductController, *controllers.ModifyProductController) {

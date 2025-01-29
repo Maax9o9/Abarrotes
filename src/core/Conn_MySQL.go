@@ -2,14 +2,18 @@ package core
 
 import (
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"sync"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type Conn_MySQL struct {
 	Db  *sql.DB
 	Err string
+}
+
+func (c *Conn_MySQL) ExecuteQuery(query string, id int) (any, any) {
+	panic("unimplemented")
 }
 
 var (

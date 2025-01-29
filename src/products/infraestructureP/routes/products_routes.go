@@ -1,7 +1,7 @@
 package routes
 
 import (
-	controllers "Abarrotes/src/products/infraestructure/controller"
+	controllers "Abarrotes/src/products/infraestructureP/controller"
 
 	"github.com/gin-gonic/gin"
 )
