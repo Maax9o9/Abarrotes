@@ -9,7 +9,7 @@ import (
 func main() {
 	router := gin.Default()
 
-	showController, createController := infraestructure.Init()
-	routes.RegisterProductRoutes(router, showController, createController)
+	showController, createController,removeController,modifyController := infraestructure.Init()
+	routes.RegisterProductRoutes(router, showController, createController,removeController,modifyController)
 	router.Run(":8080")
 }

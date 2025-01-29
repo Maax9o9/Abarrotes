@@ -5,14 +5,18 @@ import (
 	"Abarrotes/src/products/infraestructure/controller"
 )
 
-func Init() (*controllers.ShowProductController, *controllers.CreateProductController) {
+func Init() (*controllers.ShowProductController, *controllers.CreateProductController, *controllers.RemoveProductController, *controllers.ModifyProductController) {
 	ps := NewMySQL()
 
 	showProductUseCase := application.NewShowProduct(ps)
-	createUseCase := application.NewCreateProduct(ps)
+	createProductUseCase := application.NewCreateProduct(ps)
+	removeProductUseCase := application.NewRemoveProduct(ps)
+	modifyUseCase := application.NewModifyProduct(ps)
 
 	showProductController := controllers.NewShowProductController(showProductUseCase)
-	createProductController := controllers.NewCreateProductController(createUseCase)
+	createProductController := controllers.NewCreateProductController(createProductUseCase)
+	removeProductController := controllers.NewRemoveProductController(removeProductUseCase)
+	modifyProductController := controllers.NewModifyProductController(modifyUseCase)
 
-	return showProductController, createProductController
+	return showProductController, createProductController, removeProductController, modifyProductController
 }
