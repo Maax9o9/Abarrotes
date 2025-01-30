@@ -2,7 +2,9 @@ package controller
 
 import (
 	"Abarrotes/src/employee/application"
-	"Abarrotes/src/employee/domain/entities"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ShowEmployeeController struct {
@@ -13,13 +15,12 @@ func NewShowEmployeeController(se application.ShowEmployee) *ShowEmployeeControl
 	return &ShowEmployeeController{showEmployee: se}
 }
 
-func (sec *ShowEmployeeController) Execute() (entities.Employee, error) {
-	employees, err := sec.showEmployee.Execute()
+func (sec *ShowEmployeeController) Handle(ctx *gin.Context) {
+	products, err := sec.showEmployee.Execute()
 	if err != nil {
-		return entities.Employee{}, err
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
-	if len(employees) == 0 {
-		return entities.Employee{}, nil
-	}
-	return employees[0], nil
-}
+	ctx.JSON(http.StatusOK, products)
+}	
+

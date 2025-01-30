@@ -1,10 +1,11 @@
 package main
 
 import (
-	"Abarrotes/src/product/infrastructureP"
-	"Abarrotes/src/product/infrastructureP/routes"
-	"Abarrotes/src/employee/infrastructureE"
-	"Abarrotes/src/employee/infrastructureE/routes"
+	infr "Abarrotes/src/employee/infraestructureE"
+	infraestructure "Abarrotes/src/products/infraestructureP"
+	routesE "Abarrotes/src/employee/infraestructureE/routes"
+	routesP "Abarrotes/src/products/infraestructureP/routes"
+	
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,11 +13,11 @@ import (
 func main() {
 	router := gin.Default()
 
-	showController, createController,removeController,modifyController := infrastructureP.Init()
-	routes.RegisterProductRoutes(router, showController, createController,removeController,modifyController)
-	
-	addEmployeeController, deleteEmployeeController, ShowEmployeeController := infrastructureE.Init()
-	routes.RegisterEmployeeRoutes(router, addEmployeeController, deleteEmployeeController, ShowEmployeeController)
+	showController, createController, removeController, modifyController := infraestructure.Init()
+	routesP.RegisterProductRoutes(router, showController, createController, removeController, modifyController)
+
+	addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController := infr.Init()
+	routesE.RegisterEmployeeRoutes(router, addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController)
 
 	router.Run(":8080")
 }

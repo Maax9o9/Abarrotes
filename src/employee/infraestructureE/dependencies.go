@@ -13,14 +13,10 @@ func Init() (*controller.AddEmployeeController, *controller.DeleteEmployeeContro
 	getEmployeeUseCase := application.NewShowEmployee(es)
 	modifyEmployeeUseCase := application.NewModifyEmployee(es)
 
-	
-	
-	
 	createEmployeeController := controller.NewAddEmployeeController(createEmployeeUseCase)
 	deleteEmployeeController := controller.NewDeleteEmployeeController(deleteEmployeeUseCase)
 	getEmployeeController := controller.NewShowEmployeeController(*getEmployeeUseCase)
 	modifyEmployeeController := controller.NewModifyEmployeeController(*modifyEmployeeUseCase)
-	
 
 	return createEmployeeController, deleteEmployeeController, getEmployeeController, modifyEmployeeController
 }
