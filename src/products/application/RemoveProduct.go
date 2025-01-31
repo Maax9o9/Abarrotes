@@ -9,14 +9,15 @@ type RemoveProduct struct {
 	repository domain.ProductRepository
 }
 
+
 func NewRemoveProduct(repo domain.ProductRepository) *RemoveProduct {
 	return &RemoveProduct{repository: repo}
 }
 
 func (uc *RemoveProduct) Execute(productID int) error {
-	fmt.Println("Ejecutando eliminación del producto con ID:", productID) 
+	fmt.Println("Ejecutando eliminación del producto con ID:", productID)
 
-	err := uc.repository.RemoveProduct(productID)
+	err := uc.repository.Delete(productID)
 	if err != nil {
 		fmt.Println("Error al eliminar producto:", err)
 		return err

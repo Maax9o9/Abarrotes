@@ -12,13 +12,20 @@ type MySQL struct {
 }
 
 func (mysql *MySQL) DeleteEmployee(employeeID int) error {
-	panic("unimplemented")
+	query := "DELETE FROM employee WHERE id = ?"
+	_, err := mysql.conn.ExecutePreparedQuery(query, employeeID)
+	if err != nil {
+		log.Printf("Error al eliminar empleado con ID %d: %v", employeeID, err)
+		return err
+	}
+
+	return nil
 }
+
 
 func (mysql *MySQL) Add(employee entities.Employee) (entities.Employee, error) {
-	panic("unimplemented")
+    return mysql.Create(employee)
 }
-
 
 func NewMySQL() domain.EmployeeRepository {
 	conn := core.GetDBPool()
@@ -30,21 +37,26 @@ func NewMySQL() domain.EmployeeRepository {
 }
 
 func (mysql *MySQL) Create(employee entities.Employee) (entities.Employee, error) {
-	query := "INSERT INTO employee (name, lastname, age, job_position) VALUES (?, ?, ?, ?)"
+	query := "INSERT INTO employee (name, last_name, age, job_position) VALUES (?, ?, ?, ?)"
 	result, err := mysql.conn.ExecutePreparedQuery(query, employee.Name, employee.LastName, employee.Age, employee.JobPosition)
 	if err != nil {
 		log.Printf("Error al insertar empleado: %v", err)
 		return entities.Employee{}, err
 	}
 
-	lastInsertID, _ := result.LastInsertId()
+	lastInsertID, err := result.LastInsertId()
+	if err != nil {
+		log.Printf("Error al obtener el ID insertado: %v", err)
+		return entities.Employee{}, err
+	}
 	employee.ID = int(lastInsertID)
 
 	return employee, nil
 }
 
-func (mysql *MySQL) GetByID (id int) (entities.Employee, error) {
-	query := "SELECT idemployee, name, lastname, age, job_position FROM employee WHERE idemployee = ?"
+
+func (mysql *MySQL) GetByID(id int) (entities.Employee, error) {
+	query := "SELECT id, name, last_name, age, job_position FROM employee WHERE id = ?"
 	rows := mysql.conn.FetchRows(query, id)
 	defer rows.Close()
 
@@ -64,7 +76,7 @@ func (mysql *MySQL) GetByID (id int) (entities.Employee, error) {
 }
 
 func (mysql *MySQL) GetAll() ([]entities.Employee, error) {
-	query := "SELECT idemployee, name, lastname, age, job_position FROM employee"
+	query := "SELECT id, name, last_name, age, job_position FROM employee"
 	rows := mysql.conn.FetchRows(query)
 	defer rows.Close()
 
@@ -86,7 +98,7 @@ func (mysql *MySQL) GetAll() ([]entities.Employee, error) {
 }
 
 func (mysql *MySQL) ModifyEmployee(employee entities.Employee) error {
-	query := "UPDATE employee SET name = ?, lastname = ?, age = ?, job_position = ? WHERE idemployee = ?"
+	query := "UPDATE employee SET name = ?, last_name = ?, age = ?, job_position = ? WHERE id = ?"
 	_, err := mysql.conn.ExecutePreparedQuery(query, employee.Name, employee.LastName, employee.Age, employee.JobPosition, employee.ID)
 	if err != nil {
 		log.Printf("Error al modificar empleado: %v", err)

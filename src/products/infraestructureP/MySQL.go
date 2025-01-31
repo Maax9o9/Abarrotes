@@ -62,14 +62,16 @@ func (mysql *MySQL) GetAll() ([]entities.Product, error) {
 }
 
 func (mysql *MySQL) Delete(productID int) error {
-	query := "DELETE FROM product WHERE idproduct = ?"
-	_, err := mysql.conn.ExecutePreparedQuery(query, productID)
-	if err != nil {
-		log.Printf("Error al eliminar producto con ID %d: %v", productID, err)
-		return fmt.Errorf("error al eliminar producto: %v", err)
-	}
-	return nil
+    query := "DELETE FROM product WHERE idproduct = ?"
+    _, err := mysql.conn.ExecutePreparedQuery(query, productID)
+    if err != nil {
+        log.Printf("Error al eliminar producto con ID %d: %v", productID, err)
+        return fmt.Errorf("error al eliminar producto: %v", err)
+    }
+    return nil
 }
+
+
 
 func (mysql *MySQL) GetByID(productID int) (entities.Product, error) {
 	query := "SELECT idproduct, name, price FROM product WHERE idproduct = ?"

@@ -3,6 +3,7 @@ package controller
 import (
 	"Abarrotes/src/employee/application"
 	"Abarrotes/src/employee/domain/entities"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,17 +22,20 @@ func NewAddEmployeeController(uc *application.AddEmployee) *AddEmployeeControlle
 }
 
 func (c *AddEmployeeController) Handle(ctx *gin.Context) {
-	var newEmployee entities.Employee
-	if err := ctx.ShouldBindJSON(&newEmployee); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
+    var newEmployee entities.Employee
 
-	employee, err := c.useCase.Execute(newEmployee)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    if err := ctx.ShouldBindJSON(&newEmployee); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+        return
+    }
 
-	ctx.JSON(http.StatusCreated, employee)
+    log.Printf("Empleado recibido: %+v", newEmployee) 
+
+    employee, err := c.useCase.Execute(newEmployee)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    ctx.JSON(http.StatusCreated, employee)
 }

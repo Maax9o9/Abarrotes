@@ -7,5 +7,5 @@ type ProductRepository interface {
 	GetAll() ([]entities.Product, error)
 	GetByID(id int) (entities.Product, error)
 	Update(id int, product entities.Product) error
-	RemoveProduct(id int) error
+	Delete(id int) error
 }

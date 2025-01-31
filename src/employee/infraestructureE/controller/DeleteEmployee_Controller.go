@@ -16,11 +16,18 @@ func NewDeleteEmployeeController(deleteEmployeeUseCase *application.DeleteEmploy
 }
 
 func (dec *DeleteEmployeeController) DeleteEmployee(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	err := dec.deleteEmployeeUseCase.Execute(id)
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+
+	err = dec.deleteEmployeeUseCase.Execute(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Employee deleted"})
+
+	c.JSON(http.StatusOK, gin.H{"message": "Empleado eliminado correctamente"})
 }
