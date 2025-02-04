@@ -1,11 +1,12 @@
 package main
 
 import (
-	infr "Abarrotes/src/employee/infraestructureE"
-	infraestructure "Abarrotes/src/products/infraestructureP"
+	infraE "Abarrotes/src/employee/infraestructureE"
+	infraP "Abarrotes/src/products/infraestructureP"
+	infraO "Abarrotes/src/order/infraestructureO"
 	routesE "Abarrotes/src/employee/infraestructureE/routes"
 	routesP "Abarrotes/src/products/infraestructureP/routes"
-	
+	routesO "Abarrotes/src/order/infraestructureO/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,11 +14,14 @@ import (
 func main() {
 	router := gin.Default()
 
-	showController, createController, removeController, modifyController := infraestructure.Init()
+	showController, createController, removeController, modifyController := infraP.Init()
 	routesP.RegisterProductRoutes(router, showController, createController, removeController, modifyController)
 
-	addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController := infr.Init()
+	addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController := infraE.Init()
 	routesE.RegisterEmployeeRoutes(router, addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController)
+
+	addOrderController, deleteOrderController, ShowOrderController, modifyOrderController := infraO.Init()
+	routesO.RegisterOrderRoutes(router, addOrderController, deleteOrderController, ShowOrderController, modifyOrderController)
 
 	router.Run(":8080")
 }
