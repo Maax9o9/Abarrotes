@@ -20,8 +20,9 @@ func main() {
 	addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController := infraE.Init()
 	routesE.RegisterEmployeeRoutes(router, addEmployeeController, deleteEmployeeController, ShowEmployeeController, modifyEmployeeController)
 
-	addOrderController, deleteOrderController, ShowOrderController, modifyOrderController := infraO.Init()
-	routesO.RegisterOrderRoutes(router, addOrderController, deleteOrderController, ShowOrderController, modifyOrderController)
+	createOrderController, deleteOrderController, listOrderController, updateOrderController, getOrderStatusController, waitForOrderUpdateController := infraO.Init()
+	routesO.RegisterOrderRoutes(router, createOrderController, deleteOrderController, listOrderController, updateOrderController, getOrderStatusController, waitForOrderUpdateController)
+
 
 	router.Run(":8080")
 }

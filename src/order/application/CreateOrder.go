@@ -4,7 +4,6 @@ import (
 	"Abarrotes/src/order/domain"
 	"Abarrotes/src/order/domain/entities"
 )
-
 type CreateOrder struct {
 	repository domain.OrderRepository
 }

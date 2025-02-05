@@ -3,7 +3,7 @@ package entities
 import "time"
 
 type Order struct {
-	ID        int   
+	ID        int       
 	OrderDate time.Time 
-	Status    string   
+	Status    string
 }

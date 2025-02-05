@@ -12,9 +12,14 @@ func RegisterOrderRoutes(
 	deleteOrderController *controllers.DeleteOrderController,
 	listOrderController *controllers.ListOrderController,
 	updateOrderController *controllers.UpdateOrderController,
+	getOrderStatusController *controllers.GetOrderStatusController,
+	waitForOrderUpdateController *controllers.WaitForOrderUpdateController,
+	
 ) {
 	router.POST("/orders", createOrderController.Handle)
 	router.DELETE("/orders/:id", deleteOrderController.Handle)
 	router.GET("/orders", listOrderController.Handle)
 	router.PUT("/orders/:id", updateOrderController.Handle)
+	router.GET("/orders/:id/status", getOrderStatusController.Handle)
+	router.GET("/orders/:id/wait", waitForOrderUpdateController.Handle)
 }
