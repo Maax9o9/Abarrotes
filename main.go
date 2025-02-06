@@ -9,11 +9,14 @@ import (
 	routesO "Abarrotes/src/order/infraestructureO/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+
 )
 
 func main() {
 	router := gin.Default()
-
+	router.Use(cors.Default())
+	
 	showController, createController, removeController, modifyController := infraP.Init()
 	routesP.RegisterProductRoutes(router, showController, createController, removeController, modifyController)
 

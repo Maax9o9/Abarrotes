@@ -118,12 +118,33 @@ func (mysql *MySQL) GetAll() ([]entities.Order, error) {
 }
 
 func (mysql *MySQL) Update(order entities.Order) (entities.Order, error) {
-	query := "UPDATE orders SET order_date = ?, status = ? WHERE id = ?"
-	_, err := mysql.conn.ExecutePreparedQuery(query, order.OrderDate, order.Status, order.ID)
+
+	log.Printf("Actualizando la orden con ID: %d, Status: %s", order.ID, order.Status)
+
+	query := "UPDATE orders SET"
+	var params []interface{}
+
+	if !order.OrderDate.IsZero() {
+		query += " order_date = ?,"
+		params = append(params, order.OrderDate)
+	}
+	if order.Status != "" {
+		query += " status = ?,"
+		params = append(params, order.Status)
+	}
+
+	query = query[:len(query)-1]
+	query += " WHERE id = ?"
+	params = append(params, order.ID)
+
+	log.Printf("Ejecutando consulta: %s", query)
+
+	_, err := mysql.conn.ExecutePreparedQuery(query, params...)
 	if err != nil {
-		log.Printf("Error al modificar order: %v", err)
+		log.Printf("Error al modificar la orden: %v", err)
 		return entities.Order{}, err
 	}
 
 	return order, nil
 }
+
